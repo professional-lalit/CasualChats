@@ -70,6 +70,7 @@ class SignUpVM : ViewModel() {
             }
             // Show a message and update the UI
             messageToShow.value = "Authentication failed"
+            isLoadingState.value = false
         }
 
         override fun onCodeSent(
