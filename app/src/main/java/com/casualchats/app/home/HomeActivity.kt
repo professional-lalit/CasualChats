@@ -54,6 +54,7 @@ class HomeActivity : ComponentActivity() {
         }
 
         loadUserDetails()
+        loadMessages()
     }
 
     private val startForProfileImageResult =

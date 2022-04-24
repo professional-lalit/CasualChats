@@ -5,5 +5,8 @@ data class MessageHeader(
     val participants: List<String>,
     val groupName: String? = null,
     val latestMessage: String,
-    val msgCount: Int? = 0
-)
+    val unReadMsgCount: Int? = 0,
+    val isRead: Boolean? = false
+) {
+    constructor() : this("", listOf(), "", "", 0)
+}
