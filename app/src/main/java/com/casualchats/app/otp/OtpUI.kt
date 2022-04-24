@@ -56,7 +56,7 @@ fun OtpUI(
                 .padding(20.dp)
         ) {
 
-            CommonViews.AppTitle()
+            CommonViews.Title()
             Spacer(modifier = Modifier.padding(30.dp))
             CommonViews.AppTextField(
                 text = otp.value,

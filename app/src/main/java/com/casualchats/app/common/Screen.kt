@@ -3,7 +3,7 @@ package com.casualchats.app.common
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
-import com.casualchats.app.HomeActivity
+import com.casualchats.app.home.HomeActivity
 import com.casualchats.app.login.LoginActivity
 import com.casualchats.app.otp.OTPActivity
 import com.casualchats.app.signup.SignUpActivity

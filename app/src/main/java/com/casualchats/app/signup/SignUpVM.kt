@@ -40,7 +40,6 @@ class SignUpVM : ViewModel() {
 
     val navigateTo = MutableLiveData<Screen>()
     val messageToShow = MutableLiveData<String>()
-    val beginSignIn = MutableLiveData(false)
 
     private val auth = Firebase.auth
 
@@ -55,7 +54,6 @@ class SignUpVM : ViewModel() {
             //     user action.
             Log.d(TAG, "onVerificationCompleted:$credential")
             messageToShow.value = "Phone number verified"
-            beginSignIn.value = true
         }
 
         override fun onVerificationFailed(e: FirebaseException) {
@@ -155,6 +153,8 @@ class SignUpVM : ViewModel() {
         val user = Firebase.auth.currentUser
         val profileUpdates = userProfileChangeRequest {
             displayName = firstName.value + " " + lastName.value
+            if (imageUrl.isNotEmpty())
+                photoUri = Uri.parse(imageUrl)
         }
         user!!.updateProfile(profileUpdates)
             .addOnCompleteListener { task ->
@@ -174,9 +174,9 @@ class SignUpVM : ViewModel() {
             "bio" to "I am a new user."
         )
         db.collection("users")
-            .add(userToAdd)
-            .addOnSuccessListener { documentReference ->
-                Log.d(TAG, "DocumentSnapshot added with ID: ${documentReference.id}")
+            .document(user.uid)
+            .set(userToAdd)
+            .addOnSuccessListener {
                 messageToShow.value = "User registered successfully"
                 isLoadingState.value = false
                 navigateTo.value = Screen.Home()

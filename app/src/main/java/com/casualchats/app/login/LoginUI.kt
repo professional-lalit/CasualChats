@@ -3,7 +3,6 @@ package com.casualchats.app.login
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -12,7 +11,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -21,11 +19,9 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.casualchats.app.ui.theme.PurpleDark
 import com.casualchats.app.ui.widgets.CommonViews
-import com.casualchats.app.ui.widgets.CommonViews.AppButton
 import com.casualchats.app.ui.widgets.CommonViews.AppTextField
-import com.casualchats.app.ui.widgets.CommonViews.AppTitle
+import com.casualchats.app.ui.widgets.CommonViews.Title
 import com.casualchats.app.ui.widgets.CommonViews.ButtonWithLoader
 
 @Preview(showBackground = true)
@@ -66,7 +62,7 @@ fun LoginUI(
                 .padding(20.dp)
         ) {
 
-            AppTitle()
+            Title()
 
             Spacer(modifier = Modifier.padding(30.dp))
 

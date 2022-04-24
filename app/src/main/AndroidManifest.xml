@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CasualChats">
         <activity
-            android:name=".HomeActivity"
+            android:name=".home.HomeActivity"
             android:exported="true"
             android:label="@string/title_activity_home"
             android:theme="@style/Theme.CasualChats.NoActionBar" />

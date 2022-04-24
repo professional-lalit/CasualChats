@@ -26,9 +26,9 @@ object CommonViews {
 
 
     @Composable
-    fun AppTitle() {
+    fun Title(text: String? = "Casual Chats") {
         Text(
-            text = "Casual Chats",
+            text = text!!,
             fontFamily = FontFamily.Cursive,
             fontSize = 35.sp,
             color = Color.White
