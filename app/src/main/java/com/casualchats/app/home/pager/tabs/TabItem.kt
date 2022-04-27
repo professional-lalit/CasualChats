@@ -8,7 +8,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import com.casualchats.app.home.models.ProfileData
 import com.casualchats.app.models.DownloadItem
 import com.casualchats.app.models.MessageHeader
-import com.casualchats.app.models.User
 
 sealed class TabItem(
     val index: Int,
@@ -23,9 +22,10 @@ sealed class TabItem(
 
     class Chats(
         messageHeaders: MutableState<List<MessageHeader>>,
-        isLoading: MutableState<Boolean>
+        isLoading: MutableState<Boolean>,
+        onChatHeaderClicked: (String) -> Unit
     ) : TabItem(1, Icons.Default.Email, "Messages", {
-        ChatScreenForTab(messageHeaders, isLoading)
+        ChatScreenForTab(messageHeaders, isLoading, onChatHeaderClicked)
     })
 
     class Profile(

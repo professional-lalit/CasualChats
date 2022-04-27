@@ -4,4 +4,5 @@
     <string name="title_activity_otpactivity">OTPActivity</string>
     <string name="title_activity_sign_up">SignUpActivity</string>
     <string name="title_activity_home">HomeActivity</string>
+    <string name="title_activity_chat_details">ChatDetailsActivity</string>
 </resources>

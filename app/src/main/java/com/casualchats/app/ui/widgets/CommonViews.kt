@@ -66,6 +66,37 @@ object CommonViews {
     }
 
     @Composable
+    fun AppTextFieldGrey(
+        text: String,
+        hint: String,
+        keyBoardType: KeyboardType,
+        modifier: Modifier? = null,
+        callback: (String) -> Unit
+    ) {
+        TextField(
+            keyboardOptions = KeyboardOptions(keyboardType = keyBoardType),
+            value = text,
+            onValueChange = callback,
+            modifier = modifier ?: Modifier
+                .fillMaxWidth()
+                .border(
+                    BorderStroke(width = 1.dp, color = Color.LightGray),
+                    shape = RoundedCornerShape(5.dp)
+                ),
+            placeholder = { Text(text = hint, fontSize = 15.sp, color = Color.LightGray) },
+            colors = TextFieldDefaults.textFieldColors(
+                textColor = Color.Black,
+                disabledTextColor = Color.Transparent,
+                backgroundColor = Color.Transparent,
+                cursorColor = Color.Black,
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent,
+                disabledIndicatorColor = Color.Transparent
+            )
+        )
+    }
+
+    @Composable
     fun AppButton(text: String, modifier: Modifier, callback: () -> Unit) {
         TextButton(
             content = { Text(text = text) },
@@ -88,9 +119,9 @@ object CommonViews {
     }
 
     @Composable
-    fun AppToolbar(title: String, modifier: Modifier, onBackClicked: () -> Unit) {
+    fun AppToolbar(title: String, modifier: Modifier? = null, onBackClicked: () -> Unit) {
         Box(
-            modifier = modifier
+            modifier = modifier ?: Modifier
                 .fillMaxWidth()
                 .background(color = MaterialTheme.colors.primary)
                 .padding(10.dp),

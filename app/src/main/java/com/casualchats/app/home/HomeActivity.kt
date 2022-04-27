@@ -7,6 +7,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import com.casualchats.app.common.Screen
 import com.casualchats.app.common.Utils
 import com.casualchats.app.common.Utils.showToast
 import com.casualchats.app.home.vm.DownloadsVM
@@ -42,6 +43,9 @@ class HomeActivity : ComponentActivity() {
                     },
                     onLogoutClicked = {
                         logout()
+                    },
+                    onMessageHeaderClicked = {
+                        goToMessages()
                     }
                 )
             }
@@ -55,6 +59,10 @@ class HomeActivity : ComponentActivity() {
 
         loadUserDetails()
         loadMessages()
+    }
+
+    private fun goToMessages() {
+        Screen.Messages().open(this)
     }
 
     private val startForProfileImageResult =
@@ -103,11 +111,7 @@ class HomeActivity : ComponentActivity() {
     }
 
     private fun loadMessages() {
-        messagesVM.loadMessages()
-    }
-
-    private fun updateMessages() {
-        messagesVM.updateMessages()
+        messagesVM.loadMessageHeaders()
     }
 
     private fun loadDownloads() {

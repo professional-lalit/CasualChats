@@ -1,6 +1,7 @@
 package com.casualchats.app.home.pager.tabs
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
@@ -42,32 +43,34 @@ fun Render() {
     val messageHeaders = remember { mutableStateOf(dummyList) }
     ChatScreenForTab(
         messageHeaders = messageHeaders,
-        isLoading = remember { mutableStateOf(false) }
+        isLoading = remember { mutableStateOf(false) },
+        onChatHeaderClicked = {}
     )
 }
 
 @Composable
 fun ChatScreenForTab(
     messageHeaders: MutableState<List<MessageHeader>>,
-    isLoading: MutableState<Boolean>
+    isLoading: MutableState<Boolean>,
+    onChatHeaderClicked: (String) -> Unit
 ) {
 
     Box(modifier = Modifier.fillMaxSize()) {
 
         LazyColumn {
             items(messageHeaders.value.size) {
-                ChatHeaderItem(messageHeader = messageHeaders.value[it])
+                ChatHeaderItem(messageHeader = messageHeaders.value[it], onChatHeaderClicked)
             }
         }
 
         if (isLoading.value) {
-            CircularProgressIndicator()
+            CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
         }
     }
 }
 
 @Composable
-fun ChatHeaderItem(messageHeader: MessageHeader) {
+fun ChatHeaderItem(messageHeader: MessageHeader, onChatHeaderClicked: (String) -> Unit) {
 
     val msgFontWt = if (messageHeader.isRead!!) {
         FontWeight.Normal
@@ -75,9 +78,14 @@ fun ChatHeaderItem(messageHeader: MessageHeader) {
         FontWeight.Bold
     }
 
-    Box(modifier = Modifier
-        .fillMaxWidth()
-        .padding(top = 10.dp, bottom = 10.dp)) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(
+                enabled = true,
+                onClick = { onChatHeaderClicked.invoke(messageHeader.headerId) })
+            .padding(top = 10.dp, bottom = 10.dp)
+    ) {
         Column {
             Text(
                 text = messageHeader.groupName!!,

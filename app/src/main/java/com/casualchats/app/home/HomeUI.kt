@@ -45,7 +45,7 @@ fun Visualize() {
     val messageHeaders = remember { mutableStateOf<List<MessageHeader>>(listOf()) }
     val isLoading = remember { mutableStateOf(false) }
 
-    HomeUI(downloads, isLoading, messageHeaders, isLoading, profileData, {}, {}, {})
+    HomeUI(downloads, isLoading, messageHeaders, isLoading, profileData, {}, {}, {},{})
 }
 
 private var tabs: List<TabItem>? = null
@@ -60,14 +60,15 @@ fun HomeUI(
     profileData: ProfileData,
     onPhotoClicked: () -> Unit,
     onUpdateUserClicked: () -> Unit,
-    onLogoutClicked: () -> Unit
+    onLogoutClicked: () -> Unit,
+    onMessageHeaderClicked: (String) -> Unit,
 ) {
 
     val pagerState = rememberPagerState()
 
     tabs = listOf(
         TabItem.Downloads(downloads, downloadsLoading),
-        TabItem.Chats(messageHeaders, messagesLoading),
+        TabItem.Chats(messageHeaders, messagesLoading, onMessageHeaderClicked),
         TabItem.Profile(profileData, onPhotoClicked, onUpdateUserClicked, onLogoutClicked)
     )
 

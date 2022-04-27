@@ -2,10 +2,17 @@ package com.casualchats.app.common
 
 import android.content.Context
 import android.net.Uri
+import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.webkit.MimeTypeMap
 import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
+import androidx.activity.ComponentActivity
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import java.io.*
+import androidx.core.content.ContextCompat.getSystemService
+
 
 object Utils {
 
@@ -50,6 +57,16 @@ object Utils {
         while (source.read(buf).also { length = it } > 0) {
             target.write(buf, 0, length)
         }
+    }
+
+    fun ComponentActivity.closeKeyboard() {
+        val view: View = currentFocus!!
+        val manager: InputMethodManager? = getSystemService(
+            Context.INPUT_METHOD_SERVICE
+        ) as InputMethodManager?
+        manager?.hideSoftInputFromWindow(
+            view.windowToken, 0
+        )
     }
 
 }
