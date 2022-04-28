@@ -3,6 +3,7 @@ package com.casualchats.app.home.vm
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import com.casualchats.app.models.Attachment
 import com.casualchats.app.models.MessageDetail
 import com.casualchats.app.models.MessageHeader
 import com.google.firebase.auth.ktx.auth
@@ -18,10 +19,13 @@ import java.util.*
 
 class MessagesVM : ViewModel() {
 
+    val attachment = mutableStateOf<Attachment?>(null)
+
     val messageHeaders = mutableStateOf<List<MessageHeader>>(listOf())
     val messages = mutableStateOf<List<MessageDetail>>(listOf())
 
     val isLoading = mutableStateOf(false)
+    val isFileUploading = mutableStateOf(false)
     val TAG = MessagesVM::class.java.simpleName
 
     fun loadMessageHeaders() {
