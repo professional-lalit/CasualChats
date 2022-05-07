@@ -4,6 +4,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.casualchats.app.common.Prefs
+import com.casualchats.app.models.LatestMessage
 import com.casualchats.app.models.MessageHeader
 import com.casualchats.app.models.User
 import com.google.firebase.auth.ktx.auth
@@ -20,7 +21,7 @@ class SearchUsersVM @Inject constructor(private val prefs: Prefs) : ViewModel() 
     val users = mutableStateOf<List<User>>(listOf())
     val loading = mutableStateOf(false)
 
-    val headerId = MutableLiveData<String>()
+    val chatDetails = MutableLiveData<Pair<String, String>>()
 
     fun fetchUsers() {
         loading.value = true
@@ -41,7 +42,7 @@ class SearchUsersVM @Inject constructor(private val prefs: Prefs) : ViewModel() 
         val chatHeader = MessageHeader(
             participants = listOf(prefs.user!!, otherUser),
             groupName = otherUser.firstName + " " + otherUser.lastName,
-            latestMessage = "",
+            latestMessage = LatestMessage(prefs.user?.userId!!, otherUser.userId!!, ""),
             unReadMsgCount = 0,
             isRead = true
         )
@@ -52,8 +53,6 @@ class SearchUsersVM @Inject constructor(private val prefs: Prefs) : ViewModel() 
         val db = Firebase.firestore
 
         db.collection("chat-headers")
-            .document(user.uid)
-            .collection("user-chat-headers")
             .get()
             .addOnSuccessListener {
                 val headers = it.documents.map { it.toObject<MessageHeader>()!! }
@@ -61,7 +60,7 @@ class SearchUsersVM @Inject constructor(private val prefs: Prefs) : ViewModel() 
                 for (header in headers) {
                     val list = header.participants?.filter { it.userId == otherUser.userId }
                     if (list?.isNotEmpty() == true) {
-                        headerId.value = header.headerId!!
+                        chatDetails.value = Pair(header.headerId!!, otherUser.userId!!)
                         isHeaderAssigned = true
                         break
                     }
@@ -69,11 +68,9 @@ class SearchUsersVM @Inject constructor(private val prefs: Prefs) : ViewModel() 
 
                 if (!isHeaderAssigned) {
                     db.collection("chat-headers")
-                        .document(user.uid)
-                        .collection("user-chat-headers")
                         .add(chatHeader)
                         .addOnSuccessListener {
-                            headerId.value = it.id
+                            chatDetails.value = Pair(it.id, otherUser.userId!!)
                         }
                         .addOnFailureListener {
 

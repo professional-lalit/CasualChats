@@ -37,9 +37,10 @@ class SearchUsersActivity : ComponentActivity() {
 
         searchUsersVM.fetchUsers()
 
-        searchUsersVM.headerId.observe(this) {
+        searchUsersVM.chatDetails.observe(this) {
             Screen.Messages().open(this, Bundle().apply {
-                putString("headerId", it)
+                putString("headerId", it.first)
+                putString("otherUserId", it.second)
             })
         }
     }

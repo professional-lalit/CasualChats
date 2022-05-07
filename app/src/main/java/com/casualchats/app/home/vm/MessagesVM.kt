@@ -3,12 +3,8 @@ package com.casualchats.app.home.vm
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import com.casualchats.app.common.CustomApplication
 import com.casualchats.app.common.Prefs
-import com.casualchats.app.models.Attachment
-import com.casualchats.app.models.MessageDetail
-import com.casualchats.app.models.MessageHeader
-import com.casualchats.app.models.User
+import com.casualchats.app.models.*
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -43,8 +39,6 @@ class MessagesVM @Inject constructor(
         val db = Firebase.firestore
 
         db.collection("chat-headers")
-            .document(user.uid)
-            .collection("user-chat-headers")
             .get()
             .addOnSuccessListener {
                 isLoading.value = false
@@ -76,6 +70,69 @@ class MessagesVM @Inject constructor(
         }.addOnFailureListener {
             Log.d(TAG, "msg not sent, failed")
         }
+
+        updateLatestMessageInHeader(headerId, otherUserId, msg)
+        updateMessageRead(headerId, false)
+    }
+
+    private fun updateLatestMessageInHeader(headerId: String, otherUserId: String, msg: String) {
+        val user = Firebase.auth.currentUser!!
+        val db = Firebase.firestore
+
+        val latestMsg = LatestMessage(user.uid, otherUserId, msg)
+
+        db.collection("chat-headers")
+            .document(headerId)
+            .get()
+            .addOnSuccessListener {
+                val header = it.toObject<MessageHeader>()
+
+                if (header != null) {
+
+                    val newHeader = header.copy()
+                    newHeader.headerId = headerId
+                    newHeader.latestMessage = latestMsg
+
+                    db.collection("chat-headers")
+                        .document(headerId)
+                        .set(newHeader)
+                        .addOnSuccessListener {
+                            Log.d(TAG, "latest msg updated")
+                        }
+                        .addOnFailureListener {
+                            Log.d(TAG, "latest msg not updated")
+                        }
+                }
+
+            }
+    }
+
+    fun updateMessageRead(headerId: String, isRead: Boolean) {
+        val user = Firebase.auth.currentUser!!
+        val db = Firebase.firestore
+
+        db.collection("chat-headers")
+            .document(headerId)
+            .get()
+            .addOnSuccessListener {
+                val header = it.toObject<MessageHeader>()
+
+                if (header != null) {
+                    header.headerId = headerId
+                    header.isRead = isRead
+
+                    db.collection("chat-headers")
+                        .document(headerId)
+                        .set(header)
+                        .addOnSuccessListener {
+                            Log.d(TAG, "latest msg updated")
+                        }
+                        .addOnFailureListener {
+                            Log.d(TAG, "latest msg not updated")
+                        }
+                }
+
+            }
     }
 
     fun loadMessages(headerId: String) {

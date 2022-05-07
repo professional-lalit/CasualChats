@@ -45,11 +45,10 @@ fun MessageList(
     isFileUploading: MutableState<Boolean>,
     onBackClicked: () -> Unit,
     onAttachClicked: () -> Unit,
-    onSend: (String, String) -> Unit
+    onSend: (String) -> Unit
 ) {
 
     val messageTyped = remember { mutableStateOf("") }
-    var otherUserId = ""
 
     Box(modifier = Modifier.fillMaxSize()) {
 
@@ -63,9 +62,6 @@ fun MessageList(
                     if (currentUser.uid == messages.value[it].from.userId) {
                         SenderItem(message = messages.value[it])
                     } else {
-                        if (otherUserId.isEmpty()) {
-                            otherUserId = messages.value[it].from.userId!!
-                        }
                         ReceiverItem(message = messages.value[it])
                     }
                 }
@@ -157,7 +153,7 @@ fun MessageList(
                             .clickable(
                                 enabled = true,
                                 onClick = {
-                                    onSend.invoke(messageTyped.value, otherUserId)
+                                    onSend.invoke(messageTyped.value)
                                     messageTyped.value = ""
                                 }),
                         painter = painterResource(R.drawable.ic_send),

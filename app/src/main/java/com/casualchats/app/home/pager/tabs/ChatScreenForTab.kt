@@ -17,29 +17,44 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
+import com.casualchats.app.R
+import com.casualchats.app.common.CustomApplication
 import com.casualchats.app.models.MessageHeader
 import com.casualchats.app.models.User
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 @Preview(showBackground = true)
 @Composable
 fun Render() {
 
     val dummyList = listOf(
-        MessageHeader("ABCDEF", listOf(User()), "Fitness Club", "This dumb-bells are cool!"),
+        MessageHeader(
+            "ABCDEF", listOf(User()),
+            "Fitness Club", null
+        ),
         MessageHeader(
             "ABCDEF",
             listOf(User()),
             "Pets",
-            "Doberman are not cute",
+            null,
             unReadMsgCount = 100
         ),
-        MessageHeader("ABCDEF", listOf(User()), "Cars", "I bought a Porshe"),
+        MessageHeader(
+            "ABCDEF", listOf(User()), "Cars",
+            null
+        ),
     )
     val messageHeaders = remember { mutableStateOf(dummyList) }
     ChatScreenForTab(
@@ -53,7 +68,7 @@ fun Render() {
 fun ChatScreenForTab(
     messageHeaders: MutableState<List<MessageHeader>>,
     isLoading: MutableState<Boolean>,
-    onChatHeaderClicked: (String) -> Unit
+    onChatHeaderClicked: (MessageHeader) -> Unit
 ) {
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -71,32 +86,56 @@ fun ChatScreenForTab(
 }
 
 @Composable
-fun ChatHeaderItem(messageHeader: MessageHeader, onChatHeaderClicked: (String) -> Unit) {
+fun ChatHeaderItem(messageHeader: MessageHeader, onChatHeaderClicked: (MessageHeader) -> Unit) {
 
-    val msgFontWt = if (messageHeader.isRead!!) {
-        FontWeight.Normal
-    } else {
-        FontWeight.Bold
+    val otherUsers = messageHeader.participants?.filterNot {
+        it.userId == Firebase.auth.currentUser?.uid
     }
+
+    val msgFontWt =
+        if (messageHeader.isRead!!
+            || messageHeader.latestMessage?.from != Firebase.auth.currentUser?.uid
+        ) {
+            FontWeight.Normal
+        } else {
+            FontWeight.Bold
+        }
+
 
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .clickable(
                 enabled = true,
-                onClick = { onChatHeaderClicked.invoke(messageHeader.headerId!!) })
+                onClick = { onChatHeaderClicked.invoke(messageHeader) })
             .padding(top = 10.dp, bottom = 10.dp)
     ) {
         Column {
+            Row(Modifier.padding(start = 10.dp)) {
+                AsyncImage(
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data(otherUsers!![0].imageUrl)
+                        .crossfade(true)
+                        .build(),
+                    placeholder = painterResource(R.drawable.ic_profile_placeholder),
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .size(30.dp)
+                        .clip(CircleShape)
+                )
+
+                Text(
+                    text = messageHeader.groupName!!,
+                    fontSize = 18.sp,
+                    fontFamily = FontFamily.Serif,
+                    modifier = Modifier.padding(start = 10.dp)
+                )
+            }
+
             Text(
-                text = messageHeader.groupName!!,
-                modifier = Modifier.padding(start = 20.dp),
-                fontSize = 18.sp,
-                fontFamily = FontFamily.Serif
-            )
-            Text(
-                text = messageHeader.latestMessage?:"",
-                modifier = Modifier.padding(start = 20.dp),
+                text = messageHeader.latestMessage?.latestMessage ?: "",
+                modifier = Modifier.padding(start = 50.dp),
                 fontSize = 15.sp,
                 fontWeight = msgFontWt
             )

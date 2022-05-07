@@ -10,3 +10,11 @@ data class MessageDetail(
 ) {
     constructor() : this(User(), "", "", "", 0)
 }
+
+data class LatestMessage(
+    val from: String,
+    val to: String,
+    val latestMessage: String
+) {
+    constructor() : this("", "", "")
+}

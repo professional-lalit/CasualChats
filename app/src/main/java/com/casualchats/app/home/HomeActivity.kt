@@ -7,16 +7,19 @@ import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import com.casualchats.app.common.Prefs
 import com.casualchats.app.common.Screen
 import com.casualchats.app.common.Utils
 import com.casualchats.app.common.Utils.showToast
 import com.casualchats.app.home.vm.DownloadsVM
 import com.casualchats.app.home.vm.MessagesVM
 import com.casualchats.app.home.vm.ProfileVM
+import com.casualchats.app.models.MessageHeader
 import com.casualchats.app.ui.theme.CasualChatsTheme
 import com.github.dhaval2404.imagepicker.ImagePicker
 import com.google.accompanist.pager.ExperimentalPagerApi
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class HomeActivity : ComponentActivity() {
@@ -24,6 +27,9 @@ class HomeActivity : ComponentActivity() {
     private val profileVM: ProfileVM by viewModels()
     private val messagesVM: MessagesVM by viewModels()
     private val downloadsVM: DownloadsVM by viewModels()
+
+    @Inject
+    lateinit var prefs: Prefs
 
     @OptIn(ExperimentalPagerApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,7 +53,7 @@ class HomeActivity : ComponentActivity() {
                         logout()
                     },
                     onMessageHeaderClicked = {
-                        goToMessages()
+                        goToMessages(it)
                     },
                     onSearchUsersClicked = {
                         goToSearchUsers()
@@ -63,6 +69,10 @@ class HomeActivity : ComponentActivity() {
         }
 
         loadUserDetails()
+    }
+
+    override fun onResume() {
+        super.onResume()
         loadMessages()
     }
 
@@ -70,8 +80,12 @@ class HomeActivity : ComponentActivity() {
         Screen.SearchUsers().open(this)
     }
 
-    private fun goToMessages() {
-        Screen.Messages().open(this)
+    private fun goToMessages(messageHeader: MessageHeader) {
+        val otherUsers = messageHeader.participants?.filterNot { it.userId == prefs.user?.userId }
+        Screen.Messages().open(this, Bundle().apply {
+            putString("headerId", messageHeader.headerId)
+            putString("otherUserId", otherUsers!![0].userId)
+        })
     }
 
     private val startForProfileImageResult =

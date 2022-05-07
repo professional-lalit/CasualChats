@@ -4,9 +4,9 @@ data class MessageHeader(
     var headerId: String? = null,
     val participants: List<User>? = null,
     val groupName: String? = null,
-    val latestMessage: String? = null,
+    var latestMessage: LatestMessage? = null,
     val unReadMsgCount: Int? = 0,
-    val isRead: Boolean? = false
+    var isRead: Boolean? = false
 ) {
-    constructor() : this("", listOf(), "", "", 0)
+    constructor() : this("", listOf(), "", latestMessage = LatestMessage(), 0)
 }

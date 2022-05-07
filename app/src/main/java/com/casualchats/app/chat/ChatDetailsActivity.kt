@@ -51,6 +51,9 @@ class ChatDetailsActivity : ComponentActivity() {
     private val headerId by lazy {
         intent.getBundleExtra("bundle")?.getString("headerId") ?: ""
     }
+    private val otherUserId by lazy {
+        intent.getBundleExtra("bundle")?.getString("otherUserId") ?: ""
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,7 +67,7 @@ class ChatDetailsActivity : ComponentActivity() {
                     isFileUploading = messagesVM.isFileUploading,
                     onBackClicked = { finish() },
                     onAttachClicked = { getAttachment() },
-                    onSend = { msg: String, otherUserId: String ->
+                    onSend = { msg: String ->
                         closeKeyboard()
                         messagesVM.sendMessage(
                             msg,
@@ -75,6 +78,7 @@ class ChatDetailsActivity : ComponentActivity() {
                 )
             }
             messagesVM.loadMessages(headerId)
+            messagesVM.updateMessageRead(headerId, true)
         }
     }
 

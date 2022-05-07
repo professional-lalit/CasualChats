@@ -23,7 +23,7 @@ sealed class TabItem(
     class Chats(
         messageHeaders: MutableState<List<MessageHeader>>,
         isLoading: MutableState<Boolean>,
-        onChatHeaderClicked: (String) -> Unit
+        onChatHeaderClicked: (MessageHeader) -> Unit
     ) : TabItem(1, Icons.Default.Email, "Messages", {
         ChatScreenForTab(messageHeaders, isLoading, onChatHeaderClicked)
     })

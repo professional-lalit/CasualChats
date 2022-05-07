@@ -63,7 +63,7 @@ fun HomeUI(
     onPhotoClicked: () -> Unit,
     onUpdateUserClicked: () -> Unit,
     onLogoutClicked: () -> Unit,
-    onMessageHeaderClicked: (String) -> Unit,
+    onMessageHeaderClicked: (MessageHeader) -> Unit,
     onSearchUsersClicked: () -> Unit
 ) {
 
