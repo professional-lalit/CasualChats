@@ -24,21 +24,22 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.casualchats.app.models.MessageHeader
+import com.casualchats.app.models.User
 
 @Preview(showBackground = true)
 @Composable
 fun Render() {
 
     val dummyList = listOf(
-        MessageHeader("ABCDEF", listOf("ABC", "DEF"), "Fitness Club", "This dumb-bells are cool!"),
+        MessageHeader("ABCDEF", listOf(User()), "Fitness Club", "This dumb-bells are cool!"),
         MessageHeader(
             "ABCDEF",
-            listOf("ABC", "DEF"),
+            listOf(User()),
             "Pets",
             "Doberman are not cute",
             unReadMsgCount = 100
         ),
-        MessageHeader("ABCDEF", listOf("ABC", "DEF"), "Cars", "I bought a Porshe"),
+        MessageHeader("ABCDEF", listOf(User()), "Cars", "I bought a Porshe"),
     )
     val messageHeaders = remember { mutableStateOf(dummyList) }
     ChatScreenForTab(
@@ -83,7 +84,7 @@ fun ChatHeaderItem(messageHeader: MessageHeader, onChatHeaderClicked: (String) -
             .fillMaxWidth()
             .clickable(
                 enabled = true,
-                onClick = { onChatHeaderClicked.invoke(messageHeader.headerId) })
+                onClick = { onChatHeaderClicked.invoke(messageHeader.headerId!!) })
             .padding(top = 10.dp, bottom = 10.dp)
     ) {
         Column {
@@ -94,7 +95,7 @@ fun ChatHeaderItem(messageHeader: MessageHeader, onChatHeaderClicked: (String) -
                 fontFamily = FontFamily.Serif
             )
             Text(
-                text = messageHeader.latestMessage,
+                text = messageHeader.latestMessage?:"",
                 modifier = Modifier.padding(start = 20.dp),
                 fontSize = 15.sp,
                 fontWeight = msgFontWt

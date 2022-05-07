@@ -1,10 +1,10 @@
 package com.casualchats.app.models
 
 data class MessageHeader(
-    val headerId: String,
-    val participants: List<String>,
+    var headerId: String? = null,
+    val participants: List<User>? = null,
     val groupName: String? = null,
-    val latestMessage: String,
+    val latestMessage: String? = null,
     val unReadMsgCount: Int? = 0,
     val isRead: Boolean? = false
 ) {

@@ -3,9 +3,12 @@ package com.casualchats.app.home.vm
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import com.casualchats.app.common.CustomApplication
+import com.casualchats.app.common.Prefs
 import com.casualchats.app.models.Attachment
 import com.casualchats.app.models.MessageDetail
 import com.casualchats.app.models.MessageHeader
+import com.casualchats.app.models.User
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -15,9 +18,15 @@ import com.google.firebase.database.ktx.getValue
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
+import dagger.hilt.android.lifecycle.HiltViewModel
 import java.util.*
+import javax.inject.Inject
 
-class MessagesVM : ViewModel() {
+@HiltViewModel
+class MessagesVM @Inject constructor(
+    private val prefs: Prefs
+) : ViewModel() {
+    val TAG = MessagesVM::class.java.simpleName
 
     val attachment = mutableStateOf<Attachment?>(null)
 
@@ -26,7 +35,6 @@ class MessagesVM : ViewModel() {
 
     val isLoading = mutableStateOf(false)
     val isFileUploading = mutableStateOf(false)
-    val TAG = MessagesVM::class.java.simpleName
 
     fun loadMessageHeaders() {
         isLoading.value = true
@@ -41,6 +49,9 @@ class MessagesVM : ViewModel() {
             .addOnSuccessListener {
                 isLoading.value = false
                 val headers = it.documents.map { it.toObject<MessageHeader>()!! }
+                it.documents.forEachIndexed { index, documentSnapshot ->
+                    headers[index].headerId = documentSnapshot.id
+                }
                 messageHeaders.value = headers
             }
             .addOnFailureListener {
@@ -48,15 +59,13 @@ class MessagesVM : ViewModel() {
             }
     }
 
-    fun sendMessage(msg: String, otherUserId: String) {
-
-        val myId = Firebase.auth.currentUser?.uid!!
+    fun sendMessage(msg: String, otherUserId: String, headerId: String) {
 
         val database = Firebase.database.reference
-        val chatMessages = database.child("Axwdasc23dfsdfsdfsdfsd231")
+        val chatMessages = database.child(headerId)
         chatMessages.push().setValue(
             MessageDetail(
-                from = myId,
+                from = prefs.user!!,
                 to = otherUserId,
                 message = msg,
                 resourceId = null,
@@ -69,9 +78,9 @@ class MessagesVM : ViewModel() {
         }
     }
 
-    fun loadMessages() {
+    fun loadMessages(headerId: String) {
         val database = Firebase.database.reference
-        val chatMessages = database.child("Axwdasc23dfsdfsdfsdfsd231")
+        val chatMessages = database.child(headerId)
         chatMessages.addValueEventListener(chatMessagesListener)
         chatMessages.get().addOnSuccessListener {
             setLoadedMessages(it)
@@ -114,8 +123,10 @@ class MessagesVM : ViewModel() {
             isLoading.value = false
             Log.d(TAG, "Value is: $value")
         } catch (ex: Exception) {
-            Log.e(TAG, ex.localizedMessage)
+            Log.e(TAG, ex.localizedMessage ?: "")
             isLoading.value = false
         }
     }
+
+
 }

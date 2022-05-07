@@ -2,11 +2,11 @@ package com.casualchats.app.models
 
 
 data class MessageDetail(
-    val from: String,
+    val from: User,
     val to: String,
     val message: String,
     val resourceId: String? = null,
     val sentAt: Long
 ) {
-    constructor() : this("", "", "", "", 0)
+    constructor() : this(User(), "", "", "", 0)
 }

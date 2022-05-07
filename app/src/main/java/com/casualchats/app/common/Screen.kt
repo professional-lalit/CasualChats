@@ -7,6 +7,7 @@ import com.casualchats.app.chat.ChatDetailsActivity
 import com.casualchats.app.home.HomeActivity
 import com.casualchats.app.login.LoginActivity
 import com.casualchats.app.otp.OTPActivity
+import com.casualchats.app.search_users.SearchUsersActivity
 import com.casualchats.app.signup.SignUpActivity
 
 sealed class Screen(val title: String, val clazz: Class<out ComponentActivity>) {
@@ -22,4 +23,5 @@ sealed class Screen(val title: String, val clazz: Class<out ComponentActivity>) 
     class Otp : Screen("Otp", OTPActivity::class.java)
     class Home : Screen("Home", HomeActivity::class.java)
     class Messages : Screen("Messages", ChatDetailsActivity::class.java)
+    class SearchUsers : Screen("SearchUsers", SearchUsersActivity::class.java)
 }

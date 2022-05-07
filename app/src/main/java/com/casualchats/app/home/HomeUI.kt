@@ -1,17 +1,19 @@
 package com.casualchats.app.home
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.tooling.preview.Preview
-import com.casualchats.app.common.Prefs
 import com.casualchats.app.home.models.ProfileData
 import com.casualchats.app.home.pager.tabs.TabItem
 import com.casualchats.app.models.DownloadItem
 import com.casualchats.app.models.MessageHeader
-import com.casualchats.app.models.User
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.PagerState
@@ -45,7 +47,7 @@ fun Visualize() {
     val messageHeaders = remember { mutableStateOf<List<MessageHeader>>(listOf()) }
     val isLoading = remember { mutableStateOf(false) }
 
-    HomeUI(downloads, isLoading, messageHeaders, isLoading, profileData, {}, {}, {},{})
+    HomeUI(downloads, isLoading, messageHeaders, isLoading, profileData, {}, {}, {}, {}, {})
 }
 
 private var tabs: List<TabItem>? = null
@@ -62,6 +64,7 @@ fun HomeUI(
     onUpdateUserClicked: () -> Unit,
     onLogoutClicked: () -> Unit,
     onMessageHeaderClicked: (String) -> Unit,
+    onSearchUsersClicked: () -> Unit
 ) {
 
     val pagerState = rememberPagerState()
@@ -93,6 +96,14 @@ fun HomeUI(
                     })
             })
         },
+        floatingActionButton = {
+            FloatingActionButton(onClick = onSearchUsersClicked) {
+                Icon(
+                    Icons.Filled.Add, "",
+                    tint = Color.White
+                )
+            }
+        }
     )
 }
 

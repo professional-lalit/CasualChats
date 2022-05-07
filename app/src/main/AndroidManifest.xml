@@ -3,12 +3,18 @@
     package="com.casualchats.app">
 
     <application
+        android:name=".common.CustomApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.CasualChats">
+        <activity
+            android:name=".search_users.SearchUsersActivity"
+            android:exported="true"
+            android:label="@string/title_activity_search_users"
+            android:theme="@style/Theme.CasualChats.NoActionBar" />
         <activity
             android:name=".chat.ChatDetailsActivity"
             android:exported="true"

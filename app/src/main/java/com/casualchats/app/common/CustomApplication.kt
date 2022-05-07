@@ -2,19 +2,18 @@ package com.casualchats.app.common
 
 import android.app.Application
 import android.content.SharedPreferences
+import dagger.hilt.android.HiltAndroidApp
 
-class CustomApplication: Application() {
+@HiltAndroidApp
+class CustomApplication : Application() {
 
     companion object {
         var instance: CustomApplication? = null
-        var sharedPreferences: SharedPreferences? = null
     }
 
     override fun onCreate() {
         super.onCreate()
-
         instance = this
-        sharedPreferences = getSharedPreferences("Casual Chats", MODE_PRIVATE)
     }
 
 }

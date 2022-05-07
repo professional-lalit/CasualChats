@@ -16,7 +16,9 @@ import com.casualchats.app.home.vm.ProfileVM
 import com.casualchats.app.ui.theme.CasualChatsTheme
 import com.github.dhaval2404.imagepicker.ImagePicker
 import com.google.accompanist.pager.ExperimentalPagerApi
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class HomeActivity : ComponentActivity() {
 
     private val profileVM: ProfileVM by viewModels()
@@ -46,6 +48,9 @@ class HomeActivity : ComponentActivity() {
                     },
                     onMessageHeaderClicked = {
                         goToMessages()
+                    },
+                    onSearchUsersClicked = {
+                        goToSearchUsers()
                     }
                 )
             }
@@ -59,6 +64,10 @@ class HomeActivity : ComponentActivity() {
 
         loadUserDetails()
         loadMessages()
+    }
+
+    private fun goToSearchUsers() {
+        Screen.SearchUsers().open(this)
     }
 
     private fun goToMessages() {

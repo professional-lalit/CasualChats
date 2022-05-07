@@ -2,27 +2,27 @@ package com.casualchats.app.home.vm
 
 import android.net.Uri
 import android.util.Log
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import com.casualchats.app.common.CustomApplication
 import com.casualchats.app.common.Prefs
-import com.casualchats.app.common.Screen
 import com.casualchats.app.home.models.ProfileData
 import com.casualchats.app.models.User
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.auth.ktx.userProfileChangeRequest
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import dagger.hilt.android.lifecycle.HiltViewModel
 import java.io.File
+import javax.inject.Inject
 
-class ProfileVM : ViewModel() {
+@HiltViewModel
+class ProfileVM @Inject constructor(
+    private val prefs: Prefs
+) : ViewModel() {
 
     val TAG = this::class.java.simpleName
 
@@ -56,7 +56,7 @@ class ProfileVM : ViewModel() {
             .addOnSuccessListener {
                 profileData.isLoading.value = false
                 val userFetched = it.toObject<User>()!!
-                Prefs.user = userFetched
+                prefs.user = userFetched
                 profileData.firstName.value = userFetched.firstName ?: ""
                 profileData.lastName.value = userFetched.lastName ?: ""
                 profileData.phoneNumber.value = userFetched.phoneNumber ?: ""
@@ -73,7 +73,7 @@ class ProfileVM : ViewModel() {
         if (profileData.isImageUpdated.value) {
             uploadUserImage()
         } else {
-            updateUserData(Prefs.user?.imageUrl ?: "")
+            updateUserData(prefs.user?.imageUrl ?: "")
         }
     }
 
@@ -136,11 +136,11 @@ class ProfileVM : ViewModel() {
         }.addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 val downloadUri = task.result
-                val user = Prefs.user
+                val user = prefs.user
                 user?.imageUrl = downloadUri.toString()
-                Prefs.user = user
+                prefs.user = user
                 messageToShow.value = "Profile image updated"
-                updateUserData(user?.imageUrl ?: Prefs.user?.imageUrl ?: "")
+                updateUserData(user?.imageUrl ?: prefs.user?.imageUrl ?: "")
             } else {
                 messageToShow.value = "Profile image update failed"
             }

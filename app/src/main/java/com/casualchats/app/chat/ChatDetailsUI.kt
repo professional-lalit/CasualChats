@@ -32,38 +32,7 @@ import com.google.firebase.ktx.Firebase
 @Composable
 fun Render() {
 
-    val dummyList = listOf(
-        MessageDetail(
-            from = "Sylvester",
-            to = "Lalit",
-            message = "Hi, what are you doing?",
-            sentAt = 1825362323
-        ),
-        MessageDetail(
-            from = "Arnold",
-            to = "Lalit",
-            message = "When will you be available?",
-            sentAt = 1825362323
-        ),
-        MessageDetail(
-            from = "Tom",
-            to = "Lalit",
-            message = "Let's meet at 8:15 PM tomorrow",
-            sentAt = 1825362323
-        )
-    )
-    val messages = remember { mutableStateOf(dummyList) }
-    val attachment = remember { mutableStateOf(Attachment("", "", "")) }
 
-//    MessageList(
-//        Firebase.auth.currentUser!!,
-//        messages = messages,
-//        attachment = null,
-//        isLoading = remember { mutableStateOf(false) },
-//        {},
-//        {},
-//        { s: String, s1: String -> }
-//    )
 }
 
 @SuppressLint("RestrictedApi")
@@ -91,11 +60,11 @@ fun MessageList(
             )
             LazyColumn {
                 items(messages.value.size) {
-                    if (currentUser.uid == messages.value[it].from) {
+                    if (currentUser.uid == messages.value[it].from.userId) {
                         SenderItem(message = messages.value[it])
                     } else {
                         if (otherUserId.isEmpty()) {
-                            otherUserId = messages.value[it].from
+                            otherUserId = messages.value[it].from.userId!!
                         }
                         ReceiverItem(message = messages.value[it])
                     }

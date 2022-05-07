@@ -16,7 +16,9 @@ import com.casualchats.app.ui.theme.CasualChatsTheme
 import com.github.dhaval2404.imagepicker.ImagePicker
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class ChatDetailsActivity : ComponentActivity() {
 
     private val messagesVM: MessagesVM by viewModels()
@@ -46,6 +48,10 @@ class ChatDetailsActivity : ComponentActivity() {
             }
         }
 
+    private val headerId by lazy {
+        intent.getBundleExtra("bundle")?.getString("headerId") ?: ""
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -62,12 +68,13 @@ class ChatDetailsActivity : ComponentActivity() {
                         closeKeyboard()
                         messagesVM.sendMessage(
                             msg,
-                            otherUserId
+                            otherUserId,
+                            headerId
                         )
                     }
                 )
             }
-            messagesVM.loadMessages()
+            messagesVM.loadMessages(headerId)
         }
     }
 
