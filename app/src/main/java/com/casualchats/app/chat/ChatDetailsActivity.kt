@@ -68,17 +68,16 @@ class ChatDetailsActivity : ComponentActivity() {
                     onBackClicked = { finish() },
                     onAttachClicked = { getAttachment() },
                     onSend = { msg: String ->
-                        closeKeyboard()
                         messagesVM.sendMessage(
                             msg,
                             otherUserId,
                             headerId
                         )
+                        closeKeyboard()
                     }
                 )
             }
             messagesVM.loadMessages(headerId)
-            messagesVM.updateMessageRead(headerId, true)
         }
     }
 

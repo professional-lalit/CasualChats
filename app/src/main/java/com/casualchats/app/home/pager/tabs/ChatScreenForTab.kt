@@ -94,7 +94,7 @@ fun ChatHeaderItem(messageHeader: MessageHeader, onChatHeaderClicked: (MessageHe
 
     val msgFontWt =
         if (messageHeader.isRead!!
-            || messageHeader.latestMessage?.from != Firebase.auth.currentUser?.uid
+            || messageHeader.latestMessage?.from == Firebase.auth.currentUser?.uid
         ) {
             FontWeight.Normal
         } else {

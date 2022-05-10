@@ -135,7 +135,7 @@ fun ProfileScreenForTab(
                 Divider(thickness = 1.dp)
                 Spacer(modifier = Modifier.padding(10.dp))
 
-                if (profileData.isDataUpdated.value) {
+                if (profileData.isDataUpdated.value || profileData.isImageUpdated.value) {
                     CommonViews.ButtonWithLoader(
                         buttonLabel = "Update",
                         isLoading = profileData.isLoading.value

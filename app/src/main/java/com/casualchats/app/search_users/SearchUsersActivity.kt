@@ -9,15 +9,20 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
+import com.casualchats.app.common.Prefs
 import com.casualchats.app.common.Screen
 import com.casualchats.app.models.User
 import com.casualchats.app.search_users.ui.theme.CasualChatsTheme
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class SearchUsersActivity : ComponentActivity() {
 
     private val searchUsersVM: SearchUsersVM by viewModels()
+
+    @Inject
+    lateinit var prefs: Prefs
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,7 +33,9 @@ class SearchUsersActivity : ComponentActivity() {
                     searchUsersVM.loading,
                     searchUsersVM.users,
                     onUserItemClicked = {
-                        searchUsersVM.createMessageHeader(it)
+                        if (it.userId != prefs.user?.userId) {
+                            searchUsersVM.createMessageHeader(it)
+                        }
                     },
                     onBackClicked = { finish() }
                 )

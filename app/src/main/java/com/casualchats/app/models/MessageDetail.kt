@@ -12,7 +12,7 @@ data class MessageDetail(
 }
 
 data class LatestMessage(
-    val from: String,
+    var from: String,
     val to: String,
     val latestMessage: String
 ) {
