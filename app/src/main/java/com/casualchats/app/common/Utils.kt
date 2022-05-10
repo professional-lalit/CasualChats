@@ -84,7 +84,35 @@ object Utils {
     }
 
     @DrawableRes
-    fun getIconBy(extension: String): Int {
+    fun getIconBy(resourceType: ResourceType): Int {
+
+        return when (resourceType) {
+            ResourceType.AUDIO -> {
+                R.drawable.ic_audio
+            }
+            ResourceType.VIDEO -> {
+                R.drawable.ic_video_cam
+            }
+            ResourceType.IMAGE -> {
+                R.drawable.ic_camera
+            }
+            ResourceType.DOCUMENT -> {
+                R.drawable.ic_document
+            }
+            else -> {
+                R.drawable.ic_unknown_file
+            }
+        }
+
+    }
+
+    enum class ResourceType(val type: String) {
+        VIDEO("video"), AUDIO("audio"),
+        IMAGE("image"), DOCUMENT("document"),
+        UNKNOWN("unknown")
+    }
+
+    fun getResourceType(file: File): ResourceType {
         val audioTypes = listOf("MP3", "WAV", "M4A", "WMA", "AAC", "FLAC")
         val videoTypes = listOf(
             "MP4", "MOV", "WMV", "AVI", "FLV", "MKV",
@@ -94,20 +122,20 @@ object Utils {
         val docTypes = listOf("PDF", "TXT", "RTF", "DOCX", "DOC")
 
         return when {
-            extension.uppercase() in audioTypes -> {
-                R.drawable.ic_audio
+            file.extension.uppercase() in audioTypes -> {
+                ResourceType.AUDIO
             }
-            extension.uppercase() in videoTypes -> {
-                R.drawable.ic_video_cam
+            file.extension.uppercase() in videoTypes -> {
+                ResourceType.VIDEO
             }
-            extension.uppercase() in imageTypes -> {
-                R.drawable.ic_camera
+            file.extension.uppercase() in imageTypes -> {
+                ResourceType.IMAGE
             }
-            extension.uppercase() in docTypes -> {
-                R.drawable.ic_document
+            file.extension.uppercase() in docTypes -> {
+                ResourceType.DOCUMENT
             }
             else -> {
-                R.drawable.ic_unknown_file
+                ResourceType.UNKNOWN
             }
         }
 

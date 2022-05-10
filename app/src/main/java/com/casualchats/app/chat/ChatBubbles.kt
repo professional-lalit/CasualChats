@@ -1,5 +1,6 @@
 package com.casualchats.app.chat
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -8,6 +9,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.Divider
+import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -25,6 +27,7 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.casualchats.app.R
+import com.casualchats.app.common.Utils
 import com.casualchats.app.models.MessageDetail
 import com.casualchats.app.models.User
 
@@ -99,6 +102,25 @@ fun SenderItem(message: MessageDetail) {
                         modifier = Modifier.padding(end = 10.dp),
                         fontSize = 15.sp
                     )
+                    if (message.resource != null) {
+                        Row {
+                            Image(
+                                modifier = Modifier
+                                    .width(30.dp)
+                                    .height(30.dp)
+                                    .padding(start = 5.dp, end = 5.dp),
+                                painter = painterResource(
+                                    Utils.getIconBy(message.resource?.resourceType!!)
+                                ),
+                                contentDescription = null,
+                            )
+                            Text(
+                                text = message.resource.title + "\n" + message.resource.resourceSize,
+                                modifier = Modifier.padding(end = 10.dp),
+                                fontSize = 15.sp
+                            )
+                        }
+                    }
                 }
             }
 
@@ -152,6 +174,25 @@ fun ReceiverItem(message: MessageDetail) {
                         text = message.message,
                         fontSize = 15.sp
                     )
+                    if (message.resource != null) {
+                        Row {
+                            Image(
+                                modifier = Modifier
+                                    .width(30.dp)
+                                    .height(30.dp)
+                                    .padding(start = 5.dp, end = 5.dp),
+                                painter = painterResource(
+                                    Utils.getIconBy(message.resource?.resourceType!!)
+                                ),
+                                contentDescription = null,
+                            )
+                            Text(
+                                text = message.resource.title + "\n" + message.resource.resourceSize,
+                                modifier = Modifier.padding(end = 10.dp),
+                                fontSize = 15.sp
+                            )
+                        }
+                    }
                 }
             }
         }

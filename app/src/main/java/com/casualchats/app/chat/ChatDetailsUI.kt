@@ -19,14 +19,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.casualchats.app.R
 import com.casualchats.app.common.Utils
-import com.casualchats.app.models.Attachment
 import com.casualchats.app.models.MessageDetail
+import com.casualchats.app.models.ResourceMeta
 import com.casualchats.app.ui.theme.Yellow1
 import com.casualchats.app.ui.widgets.CommonViews
 import com.casualchats.app.ui.widgets.CommonViews.AppTextFieldGrey
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 
 @Preview(showBackground = true)
 @Composable
@@ -40,7 +38,7 @@ fun Render() {
 fun MessageList(
     currentUser: FirebaseUser,
     messages: MutableState<List<MessageDetail>>,
-    attachment: MutableState<Attachment?>,
+    resource: MutableState<ResourceMeta?>,
     isLoading: MutableState<Boolean>,
     isFileUploading: MutableState<Boolean>,
     onBackClicked: () -> Unit,
@@ -80,7 +78,7 @@ fun MessageList(
                 .background(color = Yellow1)
         ) {
 
-            if (attachment.value != null) {
+            if (resource.value != null) {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -94,9 +92,7 @@ fun MessageList(
                             .align(Alignment.CenterStart)
                             .padding(start = 5.dp, end = 5.dp),
                         painter = painterResource(
-                            Utils.getIconBy(
-                                attachment.value?.mimeType ?: ""
-                            )
+                            Utils.getIconBy(resource.value?.resourceType!!)
                         ),
                         contentDescription = null,
                     )
@@ -104,7 +100,7 @@ fun MessageList(
                         modifier = Modifier
                             .align(Alignment.Center)
                             .fillMaxWidth(0.6f),
-                        text = attachment.value?.name ?: "Test Resource"
+                        text = resource.value?.title ?: "Test Resource"
                     )
                     if (isFileUploading.value) {
                         CircularProgressIndicator(

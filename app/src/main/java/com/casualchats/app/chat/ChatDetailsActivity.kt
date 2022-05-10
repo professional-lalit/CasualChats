@@ -11,7 +11,7 @@ import com.casualchats.app.common.Utils
 import com.casualchats.app.common.Utils.closeKeyboard
 import com.casualchats.app.common.Utils.showToast
 import com.casualchats.app.home.vm.MessagesVM
-import com.casualchats.app.models.Attachment
+import com.casualchats.app.models.ResourceMeta
 import com.casualchats.app.ui.theme.CasualChatsTheme
 import com.github.dhaval2404.imagepicker.ImagePicker
 import com.google.firebase.auth.ktx.auth
@@ -33,10 +33,11 @@ class ChatDetailsActivity : ComponentActivity() {
                     //Image Uri will not be null for RESULT_OK
                     val fileUri = data?.data!!
                     val file = Utils.fileFromContentUri(this, fileUri)
-                    messagesVM.attachment.value = Attachment(
-                        name = file.name,
-                        path = file.path,
-                        mimeType = file.extension
+                    messagesVM.resource.value = ResourceMeta(
+                        title = file.name,
+                        resourceType = Utils.getResourceType(file),
+                        resourcePath = fileUri.path!!,
+                        resourceSize = file.length()
                     )
                 }
                 ImagePicker.RESULT_ERROR -> {
@@ -62,7 +63,7 @@ class ChatDetailsActivity : ComponentActivity() {
                 MessageList(
                     currentUser = Firebase.auth.currentUser!!,
                     messages = messagesVM.messages,
-                    attachment = messagesVM.attachment,
+                    resource = messagesVM.resource,
                     isLoading = messagesVM.isLoading,
                     isFileUploading = messagesVM.isFileUploading,
                     onBackClicked = { finish() },
@@ -73,7 +74,7 @@ class ChatDetailsActivity : ComponentActivity() {
                             otherUserId,
                             headerId
                         )
-                        closeKeyboard()
+//                        closeKeyboard()
                     }
                 )
             }
