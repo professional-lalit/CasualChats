@@ -17,7 +17,7 @@ data class LatestMessage(
     var from: String,
     val to: String,
     val latestMessage: String,
-    val resourcePath: String? = null
+    val resource: ResourceMeta? = null
 ) {
     constructor() : this("", "", "")
 }

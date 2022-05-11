@@ -74,7 +74,7 @@ class ChatDetailsActivity : ComponentActivity() {
                             otherUserId,
                             headerId
                         )
-//                        closeKeyboard()
+                        closeKeyboard()
                     }
                 )
             }

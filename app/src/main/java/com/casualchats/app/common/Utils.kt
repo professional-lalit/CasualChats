@@ -12,6 +12,8 @@ import androidx.annotation.DrawableRes
 import java.io.*
 import com.casualchats.app.R
 import android.content.ContentResolver
+import android.app.Activity
+import androidx.core.content.ContextCompat
 
 
 object Utils {
@@ -74,13 +76,10 @@ object Utils {
     }
 
     fun ComponentActivity.closeKeyboard() {
-        val view: View = currentFocus!!
-        val manager: InputMethodManager? = getSystemService(
-            Context.INPUT_METHOD_SERVICE
-        ) as InputMethodManager?
-        manager?.hideSoftInputFromWindow(
-            view.windowToken, 0
-        )
+        currentFocus?.let {
+            val inputMethodManager = ContextCompat.getSystemService(this, InputMethodManager::class.java)!!
+            inputMethodManager.hideSoftInputFromWindow(it.windowToken, 0)
+        }
     }
 
     @DrawableRes

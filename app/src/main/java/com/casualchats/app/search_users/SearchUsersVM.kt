@@ -48,11 +48,9 @@ class SearchUsersVM @Inject constructor(private val prefs: Prefs) : ViewModel() 
         )
 
         var isHeaderAssigned = false
-
-        val user = Firebase.auth.currentUser!!
         val db = Firebase.firestore
 
-        db.collection("chat-headers")
+        db.collection("chat-headers-${prefs.user?.userId!!}")
             .get()
             .addOnSuccessListener {
                 val headers = it.documents.map { it.toObject<MessageHeader>()!! }
@@ -67,7 +65,7 @@ class SearchUsersVM @Inject constructor(private val prefs: Prefs) : ViewModel() 
                 }
 
                 if (!isHeaderAssigned) {
-                    db.collection("chat-headers")
+                    db.collection("chat-headers-${prefs.user?.userId!!}")
                         .add(chatHeader)
                         .addOnSuccessListener {
                             chatDetails.value = Pair(it.id, otherUser.userId!!)

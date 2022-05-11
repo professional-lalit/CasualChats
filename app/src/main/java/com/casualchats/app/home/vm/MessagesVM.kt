@@ -40,10 +40,9 @@ class MessagesVM @Inject constructor(
     fun loadMessageHeaders() {
         isLoading.value = true
 
-        val user = Firebase.auth.currentUser!!
         val db = Firebase.firestore
 
-        db.collection("chat-headers")
+        db.collection("chat-headers-${prefs.user?.userId!!}")
             .get()
             .addOnSuccessListener {
                 isLoading.value = false
@@ -99,6 +98,9 @@ class MessagesVM @Inject constructor(
     }
 
     private fun uploadFile(headerId: String, callback: (ResourceMeta) -> Unit) {
+
+        isFileUploading.value = true
+
         val storageRef = Firebase.storage.reference
         val profileImagesRef = storageRef.child("attachments/${headerId}")
 
@@ -113,6 +115,9 @@ class MessagesVM @Inject constructor(
             }
             profileImagesRef.downloadUrl
         }.addOnCompleteListener { task ->
+
+            isFileUploading.value = false
+
             if (task.isSuccessful) {
                 val downloadUri = task.result
 
@@ -135,7 +140,7 @@ class MessagesVM @Inject constructor(
 
         val latestMsg = LatestMessage(user.uid, otherUserId, msg)
 
-        db.collection("chat-headers")
+        db.collection("chat-headers-${prefs.user?.userId!!}")
             .document(headerId)
             .get()
             .addOnSuccessListener {
@@ -149,7 +154,7 @@ class MessagesVM @Inject constructor(
                     header.latestMessage = latestMsg
                     header.isRead = false
 
-                    db.collection("chat-headers")
+                    db.collection("chat-headers-${prefs.user?.userId!!}")
                         .document(header.headerId!!)
                         .set(header)
                         .addOnSuccessListener {

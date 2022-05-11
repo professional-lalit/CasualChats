@@ -12,6 +12,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
@@ -47,6 +49,7 @@ fun MessageList(
 ) {
 
     val messageTyped = remember { mutableStateOf("") }
+    val focusRequester = remember { FocusRequester() }
 
     Box(modifier = Modifier.fillMaxSize()) {
 
@@ -66,7 +69,7 @@ fun MessageList(
             }
         }
 
-        if (isLoading.value) {
+        if (isLoading.value || isFileUploading.value) {
             CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
         }
 
@@ -78,7 +81,7 @@ fun MessageList(
                 .background(color = Yellow1)
         ) {
 
-            if (resource.value != null) {
+            if (resource.value != null && !isFileUploading.value) {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -111,6 +114,7 @@ fun MessageList(
                         )
                     }
                 }
+                focusRequester.requestFocus()
             }
 
             Box(
@@ -125,6 +129,7 @@ fun MessageList(
                     hint = "Enter your message here",
                     keyBoardType = KeyboardType.Text,
                     modifier = Modifier
+                        .focusRequester(focusRequester)
                         .fillMaxWidth(0.9f)
                         .align(Alignment.CenterStart)
                 ) {
