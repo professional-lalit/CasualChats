@@ -115,7 +115,8 @@ fun SenderItem(message: MessageDetail) {
                                 contentDescription = null,
                             )
                             Text(
-                                text = message.resource.title + "\n" + message.resource.resourceSize,
+                                text = message.resource.title + "\n"
+                                        + "File size: " + Utils.formattedFileSize(message.resource.resourceSize),
                                 modifier = Modifier.padding(end = 10.dp),
                                 fontSize = 15.sp
                             )
@@ -187,7 +188,8 @@ fun ReceiverItem(message: MessageDetail) {
                                 contentDescription = null,
                             )
                             Text(
-                                text = message.resource.title + "\n" + message.resource.resourceSize,
+                                text = message.resource.title + "\n"
+                                        + "File size: " + Utils.formattedFileSize(message.resource.resourceSize),
                                 modifier = Modifier.padding(end = 10.dp),
                                 fontSize = 15.sp
                             )

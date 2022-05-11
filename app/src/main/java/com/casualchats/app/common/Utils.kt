@@ -138,7 +138,23 @@ object Utils {
                 ResourceType.UNKNOWN
             }
         }
+    }
 
+    fun formattedFileSize(fileSize: Long): String {
+        return when {
+            fileSize < 1000 -> {
+                "$fileSize Bytes"
+            }
+            fileSize > 1000 -> {
+                "${fileSize / 1000} KB"
+            }
+            fileSize > 1000000 -> {
+                "${fileSize / 1000000} MB"
+            }
+            else -> {
+                "${fileSize / 1000000} MB"
+            }
+        }
     }
 
 }
